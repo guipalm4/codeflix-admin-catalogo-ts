@@ -1,5 +1,6 @@
 import { Category } from './category';
 import { omit } from "lodash";
+import { validate as uuidValidate } from "uuid";
 
 describe("Category Tests", () => {
     describe("Category Constructor", () => {
@@ -78,6 +79,24 @@ describe("Category Tests", () => {
                 name: "Movie",
                 is_active: false,
             });
+        })
+        test("Constructor of Category with id", () => {
+            let category: Category = new Category({name: "Movie"});
+            expect(category.id).not.toBeNull();
+            expect(uuidValidate(category.id)).toBeTruthy();
+
+            category = new Category({name: "Movie"},  null);
+            expect(category.id).not.toBeNull();
+            expect(uuidValidate(category.id)).toBeTruthy();
+
+            category = new Category({name: "Movie"},  undefined);
+            expect(category.id).not.toBeNull();
+            expect(uuidValidate(category.id)).toBeTruthy();
+
+            category = new Category({name: "Movie"},  "7a2c2389-7a77-4e34-a55a-d2d671d14630");
+            expect(category.id).not.toBeNull();
+            expect(category.id).toBe("7a2c2389-7a77-4e34-a55a-d2d671d14630");
+            expect(uuidValidate(category.id)).toBeTruthy();
         })
     })
     describe("Getters And Setters", () => {
