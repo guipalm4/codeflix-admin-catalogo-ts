@@ -1,4 +1,4 @@
-import { Category } from './category';
+import {Category, CategoryProperties} from './category';
 import { omit } from "lodash";
 import { validate as uuidValidate } from "uuid";
 
@@ -81,22 +81,20 @@ describe("Category Tests", () => {
             });
         })
         test("Constructor of Category with id", () => {
-            let category: Category = new Category({name: "Movie"});
-            expect(category.id).not.toBeNull();
-            expect(uuidValidate(category.id)).toBeTruthy();
+            type CategoryData = { props: CategoryProperties; id?: string};
 
-            category = new Category({name: "Movie"},  null);
-            expect(category.id).not.toBeNull();
-            expect(uuidValidate(category.id)).toBeTruthy();
+            const data: CategoryData[] = [
+                { props: {name: "Movie"} },
+                { props: {name: "Movie"}, id: null },
+                { props: {name: "Movie"}, id: undefined },
+                { props: {name: "Movie"}, id: "7a2c2389-7a77-4e34-a55a-d2d671d14630" },
+            ];
 
-            category = new Category({name: "Movie"},  undefined);
-            expect(category.id).not.toBeNull();
-            expect(uuidValidate(category.id)).toBeTruthy();
-
-            category = new Category({name: "Movie"},  "7a2c2389-7a77-4e34-a55a-d2d671d14630");
-            expect(category.id).not.toBeNull();
-            expect(category.id).toBe("7a2c2389-7a77-4e34-a55a-d2d671d14630");
-            expect(uuidValidate(category.id)).toBeTruthy();
+            data.forEach((categoryData): void => {
+               const category = new Category(categoryData.props, categoryData.id);
+               expect(category.id).not.toBeNull();
+               expect(uuidValidate(category.id)).toBeTruthy();
+            });
         })
     })
     describe("Getters And Setters", () => {
