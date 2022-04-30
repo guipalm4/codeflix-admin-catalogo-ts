@@ -1,6 +1,7 @@
 import {Category, CategoryProperties} from './category';
 import { omit } from "lodash";
 import { validate as uuidValidate } from "uuid";
+import {UniqueEntityId} from "../../../@shared/domain/unique-entity-id.vo";
 
 describe("Category Tests", () => {
     describe("Category Constructor", () => {
@@ -69,7 +70,6 @@ describe("Category Tests", () => {
         })
         test("Constructor of Category with name and is_active", () => {
 
-            let created_at = new Date();
             const props = {
                 name: "Movie",
                 is_active: false,
@@ -81,19 +81,18 @@ describe("Category Tests", () => {
             });
         })
         test("Constructor of Category with id", () => {
-            type CategoryData = { props: CategoryProperties; id?: string};
+            type CategoryData = { props: CategoryProperties; id?: UniqueEntityId};
 
             const data: CategoryData[] = [
                 { props: {name: "Movie"} },
                 { props: {name: "Movie"}, id: null },
                 { props: {name: "Movie"}, id: undefined },
-                { props: {name: "Movie"}, id: "7a2c2389-7a77-4e34-a55a-d2d671d14630" },
+                { props: {name: "Movie"}, id: UniqueEntityId.from("7a2c2389-7a77-4e34-a55a-d2d671d14630") },
             ];
 
             data.forEach((categoryData): void => {
                const category = new Category(categoryData.props, categoryData.id);
                expect(category.id).not.toBeNull();
-               expect(uuidValidate(category.id)).toBeTruthy();
             });
         })
     })
